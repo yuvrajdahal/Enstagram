@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "451118517567",
+    "project_id": "insta-clone-742b4",
+    "storage_bucket": "insta-clone-742b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451118517567:android:1b521198beab720ca9978a",
+        "android_client_info": {
+          "package_name": "yuvraj.instragramclone.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451118517567-depg27g6boiqd4qusvdrashtoicqf3tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMrI7I8iRXffsaVmzSbiqa4SCCRR-vFCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451118517567-depg27g6boiqd4qusvdrashtoicqf3tj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
