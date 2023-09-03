@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:instagramclone/core/domain/user.dart';
 import 'package:instagramclone/core/presentations/widgets/avtar_widgets.dart';
 import 'package:instagramclone/core/shared/constants.dart';
 
 class UserInfo extends StatelessWidget {
-  const UserInfo({
-    super.key,
-  });
+  final User? user;
+  const UserInfo({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,12 @@ class UserInfo extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Avatar(
+              Avatar(
                 radius: 80,
                 showBorder: false,
-                src: 'assets/images/yuvraj.jpeg',
-                isAsset: true,
-                colors: [
+                src: user?.profilePicture ?? "",
+                isAsset: false,
+                colors: const [
                   Color.fromARGB(255, 252, 92, 92),
                   Color.fromARGB(255, 227, 93, 93),
                   Color(0xFFFCAF45),
@@ -93,7 +93,7 @@ class UserInfo extends StatelessWidget {
             children: [
               const SizedBox(height: 8),
               Text(
-                "Yuvraj Dahal",
+                user?.email ?? "",
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall

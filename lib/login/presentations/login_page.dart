@@ -13,14 +13,7 @@ class LoginPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void registerWithGoogleAccount() async {
       final authNotifier = ref.read(authNotifierProvider.notifier);
-      return authNotifier.createGoogleAcount(
-        (user) {
-          if (user != null) {
-            debugPrint(user);
-            AutoRouter.of(context).pushNamed("/main");
-          }
-        },
-      );
+      return authNotifier.createGoogleAcount();
     }
 
     return SafeArea(

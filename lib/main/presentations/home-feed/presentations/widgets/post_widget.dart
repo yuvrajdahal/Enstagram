@@ -98,7 +98,6 @@ class _PostState extends State<Post> {
                       setState(() {
                         isLiked = !isLiked;
                       });
-                      print(isLiked);
                     },
                     icon: isLiked == true
                         ? const Icon(

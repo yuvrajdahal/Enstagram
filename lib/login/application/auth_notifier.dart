@@ -1,51 +1,80 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:instagramclone/core/domain/user.dart';
 import 'package:instagramclone/login/infrastructures/authenticator.dart';
 
-enum AuthStatus { ideal, busy }
+enum AuthStatus { ideal, busy, failure, authenticated }
 
 class AuthState {
-  final AuthStatus? status;
+  final AuthStatus status;
   final User? user;
-  final AuthFailure? failure;
 
-  AuthState.initial({this.status = AuthStatus.ideal, this.user, this.failure});
-  AuthState.unauthenticated({
-    this.status = AuthStatus.ideal,
-    this.user,
-    this.failure,
-  });
+  AuthState._({required this.status, this.user});
 
-  AuthState.authenticated({
-    this.status = AuthStatus.ideal,
-    required this.user,
-    this.failure,
-  });
+  factory AuthState.initial({AuthStatus status = AuthStatus.ideal}) =>
+      AuthState._(status: status);
 
-  AuthState.failure({
-    required this.failure,
-    this.status = AuthStatus.ideal,
-    this.user,
-  });
-}
+  factory AuthState.unauthenticated({required AuthStatus status}) =>
+      AuthState._(status: status);
 
-class AuthFailure {
-  final String message;
+  factory AuthState.authenticated(
+          {required User user, required AuthStatus status}) =>
+      AuthState._(status: status, user: user);
 
-  AuthFailure(this.message);
+  factory AuthState.failure() => AuthState._(
+        status: AuthStatus.failure,
+      );
 
   @override
-  String toString() => 'AuthFailure: $message';
-}
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-class User {}
+    return other is AuthState && other.status == status && other.user == user;
+  }
+
+  @override
+  int get hashCode => status.hashCode ^ (user?.hashCode ?? 0);
+}
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final Authenticator _authenticator;
   AuthNotifier(this._authenticator) : super(AuthState.initial());
 
-  Future<void> createGoogleAcount(callBack) async {
+  Future<void> checkAndUpdateAuthStatus() async {
+
+    final user = await _authenticator.getSignedUser();
+    state = (await _authenticator.isSigned)
+        ? AuthState.authenticated(
+            status: AuthStatus.authenticated,
+            user: User(
+              email: user.email,
+              followers: user.followers,
+              following: user.following,
+              id: user.id,
+              posts: user.posts,
+              profilePicture: user.profilePicture,
+            ),
+          )
+        : AuthState.unauthenticated(status: AuthStatus.failure);
+  }
+
+  Future<void> createGoogleAcount() async {
     final user = await _authenticator.signInUser();
-    callBack(user);
+    if (user != null) {
+      state = AuthState.authenticated(
+        status: AuthStatus.authenticated,
+        user: User(
+          email: user.email,
+          followers: user.followers,
+          following: user.following,
+          id: user.id,
+          posts: user.posts,
+          profilePicture: user.profilePicture,
+        ),
+      );
+    } else {
+      state = AuthState.unauthenticated(status: AuthStatus.failure);
+    }
   }
 }
